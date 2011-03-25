@@ -3,7 +3,7 @@ package fr.miximum.urbanjungle;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class Photo extends Activity
+public class CaptureActivity extends Activity
 {
     /** Called when the activity is first created. */
     @Override
