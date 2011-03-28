@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">UrbanJungle</string>
     <string name="capture">Capture</string>
+    <string name="preview_title">Image preview</string>
 </resources>

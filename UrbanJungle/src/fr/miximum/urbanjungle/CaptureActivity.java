@@ -20,7 +20,6 @@ package fr.miximum.urbanjungle;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,6 +41,9 @@ public class CaptureActivity extends Activity
      /** Arbitrary code to use with getActivityForResult */
      private static final int TAKE_PHOTO_CODE = 2;
 
+     /** Extra name for captured image path */
+     public static final String EXTRA_IMAGE_PATH = "extraImagePath";
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -59,10 +61,7 @@ public class CaptureActivity extends Activity
                 // We use the stock camera app to take a photo
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                // Store image in dcim
-                File file = new File(Environment.getExternalStorageDirectory() + "/DCIM", CAPTURE_TITLE);
-                Uri imgUri = Uri.fromFile(file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
                 startActivityForResult(intent, TAKE_PHOTO_CODE);
             }
         });
@@ -73,6 +72,23 @@ public class CaptureActivity extends Activity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == TAKE_PHOTO_CODE && resultCode == RESULT_OK) {
+            Uri imagePath = getImageUri();
+
+            Intent intent = new Intent(this, PreviewActivity.class);
+            intent.putExtra(EXTRA_IMAGE_PATH, imagePath.getPath());
+            startActivity(intent);
         }
+    }
+
+    /**
+     * Get the uri of the captured file
+     * @return A Uri which path is the path of an image file, stored on the dcim folder
+     */
+    private Uri getImageUri() {
+        // Store image in dcim
+        File file = new File(Environment.getExternalStorageDirectory() + "/DCIM", CAPTURE_TITLE);
+        Uri imgUri = Uri.fromFile(file);
+
+        return imgUri;
     }
 }
