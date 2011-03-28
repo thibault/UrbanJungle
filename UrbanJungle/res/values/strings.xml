@@ -3,4 +3,6 @@
     <string name="app_name">UrbanJungle</string>
     <string name="capture">Capture</string>
     <string name="preview_title">Image preview</string>
+    <string name="cancel_send">Forget about it</string>
+    <string name="confirm_send">Send it !</string>
 </resources>

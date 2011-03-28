@@ -18,11 +18,15 @@ You should have received a copy of the GNU General Public License
 along with UrbanJungle. If not, see <http://www.gnu.org/licenses/>.
 -->
 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/capture_layout"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/preview_title"
@@ -32,8 +36,35 @@ along with UrbanJungle. If not, see <http://www.gnu.org/licenses/>.
 
     <ImageView
         android:id="@+id/preview_image"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp" />
+        android:padding="15dp"
+        android:adjustViewBounds="true"
+        android:maxWidth="200dp"
+        android:maxHeight="200dp"
+        android:layout_margin="15dp"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content">
+
+        <Button
+	        android:id="@+id/preview_send_cancel"
+	        android:text="@string/cancel_send"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1.0" />
+
+        <Button
+	        android:id="@+id/preview_send_confirm"
+	        android:text="@string/confirm_send"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1.0"/>
+
+	</LinearLayout>
 
 </LinearLayout>
+</ScrollView>
