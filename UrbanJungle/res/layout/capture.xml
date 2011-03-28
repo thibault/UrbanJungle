@@ -18,22 +18,17 @@ You should have received a copy of the GNU General Public License
 along with UrbanJungle. If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/capture_layout"
+    android:orientation="horizontal"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:keepScreenOn="true">
 
-    <fr.miximum.urbanjungle.PreviewSurface
-       android:id="@+id/capture_surface"
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"/>
-
 	<Button
-        android:text="@string/capture"
         android:id="@+id/capture_button"
+        android:text="@string/capture"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"/>
+        android:layout_height="wrap_content" />
 
-</FrameLayout>
+</LinearLayout>
