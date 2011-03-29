@@ -3,8 +3,8 @@
 	package="fr.miximum.urbanjungle" android:versionCode="1"
 	android:versionName="1.0">
 
-	<permission android:name="android.permission.INTERNET" />
-	<permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 	<application android:label="@string/app_name" android:icon="@drawable/icon">
 		<activity android:name="CaptureActivity" android:label="@string/app_name">
