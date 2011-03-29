@@ -28,12 +28,6 @@ along with UrbanJungle. If not, see <http://www.gnu.org/licenses/>.
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/preview_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/preview_title" />
-
     <ImageView
         android:id="@+id/preview_image"
         android:layout_width="wrap_content"
