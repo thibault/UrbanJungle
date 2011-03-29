@@ -19,14 +19,20 @@
 package fr.miximum.urbanjungle;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.File;
 
 public class PreviewActivity extends Activity {
+
+    private File mImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +44,22 @@ public class PreviewActivity extends Activity {
         // Import image
         Bundle extras = getIntent().getExtras();
         String imagePath = extras.getString(CaptureActivity.EXTRA_IMAGE_PATH);
-        File image = new File(imagePath);
-        if (image.exists()) {
+        mImage = new File(imagePath);
+        if (mImage.exists()) {
             setResult(RESULT_OK);
-            loadImage(image);
+            loadImage(mImage);
         }
+
+        // Set button callbacks
+        Button confirm = (Button) findViewById(R.id.preview_send_confirm);
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startUpload = new Intent(getApplicationContext(), HttpUploader.class);
+                startUpload.setData(Uri.fromFile(mImage));
+                startService(startUpload);
+            }
+        });
     }
 
     /**
