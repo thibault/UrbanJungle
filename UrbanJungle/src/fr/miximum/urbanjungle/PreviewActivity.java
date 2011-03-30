@@ -269,6 +269,8 @@ public class PreviewActivity extends Activity {
 
         /** Send the file with this form name */
         private static final String FORM_FILE_TITLE = "file";
+        private static final String FIELD_LATITUDE = "latitude";
+        private static final String FIELD_LONGITUDE = "longitude";
 
         /**
          * Prepare activity before upload
@@ -330,6 +332,7 @@ public class PreviewActivity extends Activity {
             String lineEnd = "\r\n";
             String twoHyphens = "--";
             String boundary = "*****";
+            String separator = twoHyphens + boundary + lineEnd;
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
             int maxBufferSize = 1 * 1024 * 1024;
@@ -349,8 +352,13 @@ public class PreviewActivity extends Activity {
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                 publishProgress(0);
 
-                // Send multipart headers
                 dos = new DataOutputStream(conn.getOutputStream());
+
+                // Send location params
+                writeFormField(dos, separator, FIELD_LATITUDE, "" + mLocation.getLatitude());
+                writeFormField(dos, separator, FIELD_LONGITUDE, "" + mLocation.getLongitude());
+
+                // Send multipart headers
                 dos.writeBytes(twoHyphens + boundary + lineEnd);
                 dos.writeBytes("Content-Disposition: form-data; name=\"" + FORM_FILE_TITLE + "\";filename=\""
                         + file.getName() + "\"" + lineEnd);
@@ -399,6 +407,15 @@ public class PreviewActivity extends Activity {
                 Log.e(TAG, "Upload file failed: " + e.getMessage(), e);
                 return false;
             }
+        }
+
+        private void writeFormField(DataOutputStream dos, String separator, String fieldName, String fieldValue) throws IOException
+        {
+            dos.writeBytes(separator);
+            dos.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"\r\n");
+            dos.writeBytes("\r\n");
+            dos.writeBytes(fieldValue);
+            dos.writeBytes("\r\n");
         }
     }
 }
