@@ -54,9 +54,9 @@ public class PreviewActivity extends Activity {
     private static final String TAG = "UrbanJungle";
 
     /** Progress dialog id */
-    private static final int PROGRESS_DIALOG = 0;
-    private static final int ERROR_DIALOG = 1;
-    private static final int SUCCESS_DIALOG = 2;
+    private static final int UPLOAD_PROGRESS_DIALOG = 0;
+    private static final int UPLOAD_ERROR_DIALOG = 1;
+    private static final int UPLOAD_SUCCESS_DIALOG = 2;
     private static final int WAITING_LOCATION_DIALOG = 3;
 
     /** Accuracy required (in meters), before we can upload file */
@@ -182,7 +182,7 @@ public class PreviewActivity extends Activity {
     @Override
     protected Dialog onCreateDialog(int id) {
         switch(id) {
-        case PROGRESS_DIALOG:
+        case UPLOAD_PROGRESS_DIALOG:
             mDialog = new ProgressDialog(this);
             mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mDialog.setCancelable(false);
@@ -197,7 +197,7 @@ public class PreviewActivity extends Activity {
             locationDialog.setMessage(getString(R.string.location_dialog_message));
             return locationDialog;
 
-        case ERROR_DIALOG:
+        case UPLOAD_ERROR_DIALOG:
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.upload_error_title)
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -211,7 +211,7 @@ public class PreviewActivity extends Activity {
                     });
             return builder.create();
 
-        case SUCCESS_DIALOG:
+        case UPLOAD_SUCCESS_DIALOG:
             AlertDialog.Builder success = new AlertDialog.Builder(this);
             success.setTitle(R.string.upload_success_title)
                     .setIcon(android.R.drawable.ic_dialog_info)
@@ -236,7 +236,7 @@ public class PreviewActivity extends Activity {
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
         switch(id) {
-        case PROGRESS_DIALOG:
+        case UPLOAD_PROGRESS_DIALOG:
             mDialog.setProgress(0);
             mDialog.setTitle(getString(R.string.progress_dialog_title_connecting));
         }
@@ -273,7 +273,7 @@ public class PreviewActivity extends Activity {
             setProgressBarIndeterminateVisibility(true);
             mConfirm.setEnabled(false);
             mCancel.setEnabled(false);
-            showDialog(PROGRESS_DIALOG);
+            showDialog(UPLOAD_PROGRESS_DIALOG);
         }
 
         /**
@@ -287,9 +287,9 @@ public class PreviewActivity extends Activity {
             mDialog.dismiss();
 
             if (result) {
-                showDialog(SUCCESS_DIALOG);
+                showDialog(UPLOAD_SUCCESS_DIALOG);
             } else {
-                showDialog(ERROR_DIALOG);
+                showDialog(UPLOAD_ERROR_DIALOG);
             }
         }
 
