@@ -23,9 +23,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +57,13 @@ public class PreviewActivity extends Activity {
     private static final int PROGRESS_DIALOG = 0;
     private static final int ERROR_DIALOG = 1;
     private static final int SUCCESS_DIALOG = 2;
+    private static final int WAITING_LOCATION_DIALOG = 3;
+
+    /** Accuracy required (in meters), before we can upload file */
+    private static final int LOCATION_ACCURACY_NEEDED = 100;
+
+    /** Accuracy good enough so we can stop listening to gps */
+    private static final int LOCATION_ACCURACY_ENOUGH = 30;
 
     /** Handler to confirm button */
     private Button mConfirm;
@@ -62,6 +73,10 @@ public class PreviewActivity extends Activity {
 
     /** Uploading progress dialog */
     private ProgressDialog mDialog;
+
+    private LocationListener mLocationListener;
+    private LocationManager mLocationManager;
+    private Location mLocation;
 
     /**
      * Called when the activity is created
@@ -85,6 +100,21 @@ public class PreviewActivity extends Activity {
             loadImage(mImage);
         }
 
+        registerButtonCallbacks();
+        registerLocationListener();
+        showDialog(WAITING_LOCATION_DIALOG);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mLocationManager.removeUpdates(mLocationListener);
+    }
+
+    /**
+     * Register callbacks for ui buttons
+     */
+    protected void registerButtonCallbacks() {
         // Cancel button callback
         mCancel = (Button) findViewById(R.id.preview_send_cancel);
         mCancel.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +126,7 @@ public class PreviewActivity extends Activity {
 
         // Confirm button callback
         mConfirm = (Button) findViewById(R.id.preview_send_confirm);
+        mConfirm.setEnabled(false);
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +136,48 @@ public class PreviewActivity extends Activity {
     }
 
     /**
-     * Initialize the progress dialog
+     * Register required listeners to obtain gps location
+     */
+    protected void registerLocationListener() {
+
+        mLocationListener = new LocationListener() {
+            private boolean minAccuracyReached = false;
+
+            @Override
+            public void onLocationChanged(Location location) {
+                if (mLocation == null) {
+                    mLocation = location;
+                } else if (location.getAccuracy() < mLocation.getAccuracy()) {
+                    mLocation = location;
+                }
+
+                if (!minAccuracyReached && mLocation.getAccuracy() <= LOCATION_ACCURACY_NEEDED) {
+                    minAccuracyReached = true;
+                    dismissDialog(WAITING_LOCATION_DIALOG);
+                    mConfirm.setEnabled(true);
+                }
+
+                if (mLocation.getAccuracy() <= LOCATION_ACCURACY_ENOUGH) {
+                    mLocationManager.removeUpdates(mLocationListener);
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            @Override
+            public void onProviderEnabled(String provider) {}
+
+            @Override
+            public void onProviderDisabled(String provider) {}
+        };
+
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, LOCATION_ACCURACY_NEEDED, mLocationListener);
+    }
+
+    /**
+     * Initialize the dialogs
      */
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -116,6 +188,14 @@ public class PreviewActivity extends Activity {
             mDialog.setCancelable(false);
             mDialog.setTitle(getString(R.string.progress_dialog_title_connecting));
             return mDialog;
+
+        case WAITING_LOCATION_DIALOG:
+            ProgressDialog locationDialog = new ProgressDialog(this);
+            locationDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            locationDialog.setCancelable(false);
+            locationDialog.setTitle(getString(R.string.location_dialog_title));
+            locationDialog.setMessage(getString(R.string.location_dialog_message));
+            return locationDialog;
 
         case ERROR_DIALOG:
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

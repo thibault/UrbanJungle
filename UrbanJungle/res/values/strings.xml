@@ -13,4 +13,6 @@
     <string name="success">Back to home</string>
     <string name="upload_success_title">Image uploaded</string>
     <string name="upload_success_message">Your image was uploaded successfully. Thank you for sharing.</string>
+    <string name="location_dialog_title">Waiting for your location</string>
+    <string name="location_dialog_message">We need to gather your location before we can send your photo to our server. Please wait as we proceed.</string>
 </resources>
