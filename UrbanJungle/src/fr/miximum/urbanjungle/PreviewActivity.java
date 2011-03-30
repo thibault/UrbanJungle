@@ -112,8 +112,8 @@ public class PreviewActivity extends Activity {
         case PROGRESS_DIALOG:
             mDialog = new ProgressDialog(this);
             mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mDialog.setMessage(getString(R.string.progress_dialog_title));
             mDialog.setCancelable(false);
+            mDialog.setTitle(getString(R.string.progress_dialog_title_connecting));
             return mDialog;
 
         case ERROR_DIALOG:
@@ -143,6 +143,7 @@ public class PreviewActivity extends Activity {
         switch(id) {
         case PROGRESS_DIALOG:
             mDialog.setProgress(0);
+            mDialog.setTitle(getString(R.string.progress_dialog_title_connecting));
         }
     }
 
@@ -205,6 +206,10 @@ public class PreviewActivity extends Activity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
 
+            if (values[0] == 0) {
+                mDialog.setTitle(getString(R.string.progress_dialog_title_uploading));
+            }
+
             mDialog.setProgress(values[0]);
         }
 
@@ -240,6 +245,7 @@ public class PreviewActivity extends Activity {
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Connection", "Keep-Alive");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                publishProgress(0);
 
                 // Send multipart headers
                 dos = new DataOutputStream(conn.getOutputStream());
