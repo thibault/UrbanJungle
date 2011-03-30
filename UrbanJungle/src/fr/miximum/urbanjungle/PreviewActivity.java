@@ -20,8 +20,10 @@
 package fr.miximum.urbanjungle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -32,13 +34,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PreviewActivity extends Activity {
@@ -51,6 +51,7 @@ public class PreviewActivity extends Activity {
 
     /** Progress dialog id */
     private static final int PROGRESS_DIALOG = 0;
+    private static final int ERROR_DIALOG = 1;
 
     /** Handler to confirm button */
     private Button mConfirm;
@@ -85,6 +86,12 @@ public class PreviewActivity extends Activity {
 
         // Cancel button callback
         mCancel = (Button) findViewById(R.id.preview_send_cancel);
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreviewActivity.this.finish();
+            }
+        });
 
         // Confirm button callback
         mConfirm = (Button) findViewById(R.id.preview_send_confirm);
@@ -108,6 +115,21 @@ public class PreviewActivity extends Activity {
             mDialog.setMessage(getString(R.string.progress_dialog_title));
             mDialog.setCancelable(false);
             return mDialog;
+
+        case ERROR_DIALOG:
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.upload_error_title)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setMessage(R.string.upload_error_message)
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreviewActivity.this.finish();
+                        }
+                    });
+            return builder.create();
+
         default:
             return null;
         }
@@ -124,7 +146,6 @@ public class PreviewActivity extends Activity {
         }
     }
 
-
     /**
      * Load the image file into the imageView
      *
@@ -139,7 +160,7 @@ public class PreviewActivity extends Activity {
     /**
      * Asynchronous task to upload file to server
      */
-    class UploadImageTask extends AsyncTask<File, Integer, Void> {
+    class UploadImageTask extends AsyncTask<File, Integer, Boolean> {
 
         /** Upload file to this url */
         private static final String UPLOAD_URL = "http://thibault-laptop:8080/upload";
@@ -163,16 +184,21 @@ public class PreviewActivity extends Activity {
          * Clean app state after upload is completed
          */
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             setProgressBarIndeterminateVisibility(false);
             mConfirm.setEnabled(true);
+            mDialog.dismiss();
+
+            if (result) {
+            } else {
+                showDialog(ERROR_DIALOG);
+            }
         }
 
         @Override
-        protected Void doInBackground(File... image) {
-            doFileUpload(image[0], UPLOAD_URL);
-            return null;
+        protected Boolean doInBackground(File... image) {
+            return doFileUpload(image[0], UPLOAD_URL);
         }
 
         @Override
@@ -188,11 +214,12 @@ public class PreviewActivity extends Activity {
          *
          * @param file The file to upload
          * @param uploadUrl The uri the file is to be uploaded
+         *
+         * @return boolean true is the upload succeeded
          */
-        private void doFileUpload(File file, String uploadUrl) {
+        private boolean doFileUpload(File file, String uploadUrl) {
             HttpURLConnection conn = null;
             DataOutputStream dos = null;
-            DataInputStream inStream = null;
             String lineEnd = "\r\n";
             String twoHyphens = "--";
             String boundary = "*****";
@@ -248,24 +275,21 @@ public class PreviewActivity extends Activity {
                 dos.flush();
                 dos.close();
                 fileInputStream.close();
-            } catch (MalformedURLException ex) {
-                Log.e(TAG, "error: " + ex.getMessage(), ex);
             } catch (IOException ioe) {
-                Log.e(TAG, "error: " + ioe.getMessage(), ioe);
+                Log.e(TAG, "Cannot upload file: " + ioe.getMessage(), ioe);
+                return false;
             }
 
             // Read response
             try {
-                inStream = new DataInputStream(conn.getInputStream());
-                String str;
-
-                while ((str = inStream.readLine()) != null) {
-                    Log.e(TAG, "Server Response " + str);
-                }
-                inStream.close();
-
+                int responseCode = conn.getResponseCode();
+                return responseCode == 200;
             } catch (IOException ioex) {
-                Log.e(TAG, "error: " + ioex.getMessage(), ioex);
+                Log.e(TAG, "Upload file failed: " + ioex.getMessage(), ioex);
+                return false;
+            } catch (Exception e) {
+                Log.e(TAG, "Upload file failed: " + e.getMessage(), e);
+                return false;
             }
         }
     }

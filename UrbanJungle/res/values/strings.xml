@@ -6,4 +6,7 @@
     <string name="cancel_send">Forget about it</string>
     <string name="confirm_send">Send it !</string>
     <string name="progress_dialog_title">Uploading file. Please wait.</string>
+    <string name="upload_error_title">Watch out! An error occured!</string>
+    <string name="upload_error_message">Looks like the upload failed. I can express how much I\'m sorry for that. Please, try again later.</string>
+    <string name="retry">I\'ll try again later</string>
 </resources>
