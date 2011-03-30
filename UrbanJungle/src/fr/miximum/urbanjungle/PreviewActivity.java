@@ -268,7 +268,7 @@ public class PreviewActivity extends Activity {
         private static final String UPLOAD_URL = "http://thibault-laptop:8080/upload";
 
         /** Send the file with this form name */
-        private static final String FORM_FILE_TITLE = "file";
+        private static final String FIELD_FILE = "file";
         private static final String FIELD_LATITUDE = "latitude";
         private static final String FIELD_LONGITUDE = "longitude";
 
@@ -360,7 +360,7 @@ public class PreviewActivity extends Activity {
 
                 // Send multipart headers
                 dos.writeBytes(twoHyphens + boundary + lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name=\"" + FORM_FILE_TITLE + "\";filename=\""
+                dos.writeBytes("Content-Disposition: form-data; name=\"" + FIELD_FILE + "\";filename=\""
                         + file.getName() + "\"" + lineEnd);
                 dos.writeBytes(lineEnd);
 
