@@ -195,6 +195,12 @@ public class PreviewActivity extends Activity {
             locationDialog.setCancelable(false);
             locationDialog.setTitle(getString(R.string.location_dialog_title));
             locationDialog.setMessage(getString(R.string.location_dialog_message));
+            locationDialog.setButton(getString(R.string.cancel_send), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    PreviewActivity.this.finish();
+                }
+            });
             return locationDialog;
 
         case UPLOAD_ERROR_DIALOG:
