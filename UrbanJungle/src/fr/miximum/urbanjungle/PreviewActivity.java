@@ -52,6 +52,7 @@ public class PreviewActivity extends Activity {
     /** Progress dialog id */
     private static final int PROGRESS_DIALOG = 0;
     private static final int ERROR_DIALOG = 1;
+    private static final int SUCCESS_DIALOG = 2;
 
     /** Handler to confirm button */
     private Button mConfirm;
@@ -130,6 +131,20 @@ public class PreviewActivity extends Activity {
                     });
             return builder.create();
 
+        case SUCCESS_DIALOG:
+            AlertDialog.Builder success = new AlertDialog.Builder(this);
+            success.setTitle(R.string.upload_success_title)
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setMessage(R.string.upload_success_message)
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.success), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreviewActivity.this.finish();
+                        }
+                    });
+            return success.create();
+
         default:
             return null;
         }
@@ -192,6 +207,7 @@ public class PreviewActivity extends Activity {
             mDialog.dismiss();
 
             if (result) {
+                showDialog(SUCCESS_DIALOG);
             } else {
                 showDialog(ERROR_DIALOG);
             }

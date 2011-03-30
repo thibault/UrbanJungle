@@ -10,4 +10,7 @@
     <string name="upload_error_title">Watch out! An error occured!</string>
     <string name="upload_error_message">Looks like the upload failed. I can express how much I\'m sorry for that. Please, try again later.</string>
     <string name="retry">I\'ll try again later</string>
+    <string name="success">Back to home</string>
+    <string name="upload_success_title">Image uploaded</string>
+    <string name="upload_success_message">Your image was uploaded successfully. Thank you for sharing.</string>
 </resources>
