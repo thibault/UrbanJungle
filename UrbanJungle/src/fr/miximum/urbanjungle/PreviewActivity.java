@@ -20,6 +20,8 @@
 package fr.miximum.urbanjungle;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -47,10 +49,23 @@ public class PreviewActivity extends Activity {
     /** Log tag */
     private static final String TAG = "UrbanJungle";
 
+    /** Progress dialog id */
+    private static final int PROGRESS_DIALOG = 0;
+
+    /** Handler to confirm button */
     private Button mConfirm;
 
+    /** Handler to cancel button */
     private Button mCancel;
 
+    /** Uploading progress dialog */
+    private ProgressDialog mDialog;
+
+    /**
+     * Called when the activity is created
+     *
+     * We load the captured image, and register button callbacks
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +97,35 @@ public class PreviewActivity extends Activity {
     }
 
     /**
+     * Initialize the progress dialog
+     */
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch(id) {
+        case PROGRESS_DIALOG:
+            mDialog = new ProgressDialog(this);
+            mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mDialog.setMessage(getString(R.string.progress_dialog_title));
+            mDialog.setCancelable(false);
+            return mDialog;
+        default:
+            return null;
+        }
+    }
+
+    /**
+     * Prepare the progress dialog
+     */
+    @Override
+    protected void onPrepareDialog(int id, Dialog dialog) {
+        switch(id) {
+        case PROGRESS_DIALOG:
+            mDialog.setProgress(0);
+        }
+    }
+
+
+    /**
      * Load the image file into the imageView
      *
      * @param image
@@ -103,14 +147,21 @@ public class PreviewActivity extends Activity {
         /** Send the file with this form name */
         private static final String FORM_FILE_TITLE = "file";
 
+        /**
+         * Prepare activity before upload
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             setProgressBarIndeterminateVisibility(true);
             mConfirm.setEnabled(false);
             mCancel.setEnabled(false);
+            showDialog(PROGRESS_DIALOG);
         }
 
+        /**
+         * Clean app state after upload is completed
+         */
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -124,12 +175,19 @@ public class PreviewActivity extends Activity {
             return null;
         }
 
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            mDialog.setProgress(values[0]);
+        }
+
         /**
          * Upload given file to given url, using raw socket
          * @see http://stackoverflow.com/questions/4966910/androidhow-to-upload-mp3-file-to-http-server
          *
-         * @param file
-         * @param uploadUrl
+         * @param file The file to upload
+         * @param uploadUrl The uri the file is to be uploaded
          */
         private void doFileUpload(File file, String uploadUrl) {
             HttpURLConnection conn = null;
@@ -141,6 +199,8 @@ public class PreviewActivity extends Activity {
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
             int maxBufferSize = 1 * 1024 * 1024;
+            int sentBytes = 0;
+            long fileSize = file.length();
 
             // Send request
             try {
@@ -170,7 +230,13 @@ public class PreviewActivity extends Activity {
                 // Send file data
                 bytesRead = fileInputStream.read(buffer, 0, bufferSize);
                 while (bytesRead > 0) {
+                    // Write buffer to socket
                     dos.write(buffer, 0, bufferSize);
+
+                    // Update progress dialog
+                    sentBytes += bufferSize;
+                    publishProgress((int)(sentBytes * 100 / fileSize));
+
                     bytesAvailable = fileInputStream.available();
                     bufferSize = Math.min(bytesAvailable, maxBufferSize);
                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);

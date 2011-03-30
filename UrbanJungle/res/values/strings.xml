@@ -5,4 +5,5 @@
     <string name="preview_title">Image preview</string>
     <string name="cancel_send">Forget about it</string>
     <string name="confirm_send">Send it !</string>
+    <string name="progress_dialog_title">Uploading file. Please wait.</string>
 </resources>
