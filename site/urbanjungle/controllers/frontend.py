@@ -41,8 +41,14 @@ def upload(latitude, longitude):
 def map():
     return render_template('map.html')
 
-@frontend.route('/map/markers.json')
-def get_markers():
-    markers = Report.query.all()
+@frontend.route('/map/markers/<ne_lat>,<ne_lng>,<sw_lat>,<sw_lng>.json')
+def get_markers(ne_lat, ne_lng, sw_lat, sw_lng):
+    markers = Report.query \
+        .filter(Report.latitude < ne_lat) \
+        .filter(Report.latitude > sw_lat) \
+        .filter(Report.longitude < ne_lng) \
+        .filter(Report.longitude > sw_lng) \
+        .all()
+
     json_markers = { 'markers' : [ marker.__json__() for marker in markers ] }
     return jsonify(json_markers)
