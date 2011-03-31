@@ -265,7 +265,7 @@ public class PreviewActivity extends Activity {
     class UploadImageTask extends AsyncTask<File, Integer, Boolean> {
 
         /** Upload file to this url */
-        private static final String UPLOAD_URL = "http://thibault-laptop:8080/upload";
+        private static final String UPLOAD_URL = "http://thibault-laptop:8080/report";
 
         /** Send the file with this form name */
         private static final String FIELD_FILE = "file";
@@ -339,6 +339,10 @@ public class PreviewActivity extends Activity {
             int sentBytes = 0;
             long fileSize = file.length();
 
+            // The definitive url is of the kind:
+            // http://host/report/latitude,longitude
+            uploadUrl += "/" + mLocation.getLatitude() + "," + mLocation.getLongitude();
+
             // Send request
             try {
                 // Configure connection
@@ -347,7 +351,7 @@ public class PreviewActivity extends Activity {
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 conn.setUseCaches(false);
-                conn.setRequestMethod("POST");
+                conn.setRequestMethod("PUT");
                 conn.setRequestProperty("Connection", "Keep-Alive");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                 publishProgress(0);
