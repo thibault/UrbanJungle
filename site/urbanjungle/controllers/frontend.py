@@ -1,6 +1,8 @@
 import os
 from flask import Module, request, current_app
 from werkzeug import secure_filename
+from urbanjungle.models import db
+from urbanjungle.models.report import Report
 
 frontend = Module(__name__)
 
@@ -12,8 +14,13 @@ def upload(latitude, longitude):
     if request.method == 'PUT':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            print filename
+
+            r = Report(latitude, longitude)
+            db.session.add(r)
+            db.session.commit()
+
+            filename = '%s.jpg' % r.id
+
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             return ''
         else:
