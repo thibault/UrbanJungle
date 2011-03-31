@@ -19,3 +19,5 @@ class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
     UPLOAD_FOLDER = '/tmp/upload'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
+    SQLALCHEMY_ECHO = False
