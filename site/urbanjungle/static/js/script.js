@@ -30,6 +30,7 @@ function addMarkers(map) {
 
     markersUri += ne.lat() + ',' + ne.lng() + ',' + sw.lat() + ',' + sw.lng() + '.json';
 
+    info = new google.maps.InfoWindow();
     $.getJSON(markersUri, function(data) {
         $.each(data['markers'], function(k, v) {
             createMarker(map, v['latitude'], v['longitude']);
@@ -41,10 +42,18 @@ function addMarkers(map) {
  * Add a marker on the map
  */
 function createMarker(map, latitude, longitude) {
-    m = new google.maps.Marker({
+    var m = new google.maps.Marker({
         position: new google.maps.LatLng(latitude, longitude),
-        map: map
+        map: map,
     });
+    google.maps.event.addListener(m, 'click', function() {
+        openInfoWindow(map, m);
+    });
+}
+
+function openInfoWindow(map, m) {
+    info.setContent('<div class="infoWindow">toto</div>');
+    info.open(map, m);
 }
 
 /**
