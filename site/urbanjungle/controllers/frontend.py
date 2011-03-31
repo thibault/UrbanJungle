@@ -1,5 +1,5 @@
 import os
-from flask import Module, request, current_app
+from flask import Module, request, current_app, render_template
 from werkzeug import secure_filename
 from urbanjungle.models import db
 from urbanjungle.models.report import Report
@@ -35,3 +35,7 @@ def upload(latitude, longitude):
             <input type=submit value=Upload>
             </form>
         '''
+
+@frontend.route('/map')
+def map():
+    return render_template('map.html')

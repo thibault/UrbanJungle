@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flaskext.babel import Babel
 
 app = Flask(__name__)
 if os.getenv('DEV') == 'yes':
@@ -8,6 +9,8 @@ elif os.getenv('TEST') == 'yes':
     app.config.from_object('urbanjungle.config.TestConfig')
 else:
     app.config.from_object('urbanjungle.config.ProductionConfig')
+
+babel = Babel(app)
 
 from urbanjungle.controllers.frontend import frontend
 app.register_module(frontend)
