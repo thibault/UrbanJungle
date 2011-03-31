@@ -1,8 +1,9 @@
 import os
-from flask import Module, request, current_app, render_template
+from flask import Module, request, current_app, render_template, jsonify
 from werkzeug import secure_filename
 from urbanjungle.models import db
 from urbanjungle.models.report import Report
+from sqlalchemy.ext.serializer import dumps
 
 frontend = Module(__name__)
 
@@ -38,5 +39,10 @@ def upload(latitude, longitude):
 
 @frontend.route('/map')
 def map():
+    return render_template('map.html')
+
+@frontend.route('/map/markers.json')
+def get_markers():
     markers = Report.query.all()
-    return render_template('map.html', markers=markers)
+    json_markers = { 'markers' : [ marker.__json__() for marker in markers ] }
+    return jsonify(json_markers)

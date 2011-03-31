@@ -14,3 +14,6 @@ class Report(db.Model):
 
     def __repr__(self):
         return '<Report(%s,%s)>' % (self.latitude, self.longitude)
+
+    def __json__(self):
+        return { 'latitude': '%9.6f' % self.latitude, 'longitude': '%9.6f' % self.longitude }
