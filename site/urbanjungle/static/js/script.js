@@ -2,16 +2,17 @@
  * Create and configure the map
  */
 function createGmap() {
-    var latlng = new google.maps.LatLng(43.611005,3.878989);
+    var latlng = new google.maps.LatLng(46.227638,2.213749);
     var myOptions = {
-        zoom: 12,
+        zoom: 6,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
     google.maps.event.addListener(map, 'idle', function() {
-         addMarkers(map);
+        map.clearMarkers();
+        addMarkers(map);
     });
 
     return map
@@ -44,4 +45,16 @@ function createMarker(map, latitude, longitude) {
         position: new google.maps.LatLng(latitude, longitude),
         map: map
     });
+}
+
+/**
+ * Use the geolocation html5 api to center map on current user position
+ */
+function centerOnCurrentPosition(map) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+            map.setZoom(13);
+        });
+    }
 }
