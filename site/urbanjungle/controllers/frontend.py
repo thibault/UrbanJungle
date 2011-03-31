@@ -38,4 +38,5 @@ def upload(latitude, longitude):
 
 @frontend.route('/map')
 def map():
-    return render_template('map.html')
+    markers = Report.query.all()
+    return render_template('map.html', markers=markers)
