@@ -2,10 +2,6 @@ import os
 from flask import Flask, request, redirect, url_for
 from werkzeug import secure_filename
 
-UPLOAD_FOLDER = '/tmp/upload'
-ALLOWED_EXTENSIONS = set(['jpg', 'jpeg'])
-MAX_CONTENT_LENGTH = 2 * 1024 * 1024
-
 app = Flask(__name__)
 if os.getenv('DEV') == 'yes':
     app.config.from_object('urbanjungle.config.DevelopmentConfig')
@@ -15,7 +11,7 @@ else:
     app.config.from_object('urbanjungle.config.ProductionConfig')
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -24,7 +20,7 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             print filename
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return ''
         else:
             return 'File not allowed', 403
