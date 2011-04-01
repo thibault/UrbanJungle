@@ -11,6 +11,7 @@ class Config(object):
 class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
+    UPLOAD_FOLDER = '/home/urbanjungle/reports/'
 
 class TestConfig(Config):
     DEBUG = False
