@@ -35,6 +35,33 @@
   </script>
 {% endblock %}
 
+{% block header %}
+<div class="grid_10 prefix_1">
+    <h1>Urban jungle</h1>
+    <span class="moto">You commute by bike? We show you were you are likely to die.</span>
+</div>
+<div class="clear" />
+{% endblock %}
+
 {% block main %}
-<div id="map_canvas" style="width:100%; height:100%"> </div>
+<div class="grid_10 prefix_1 suffix_1">
+    <div id="map_canvas"> </div>
+    <div class="clear" />
+</div>
+
+<div class="grid_10 prefix_1">
+    <h2>What is it?</h2>
+    <p>This map shows where are the dangerous spots for bikers in the streets of your city.</p>
+
+    <h2>How does it works?</h2>
+    <p>
+        <ol>
+            <li>Download the free android app ;</li>
+            <li>Use your bike as usual ;</li>
+            <li>Notice a dangerous spot (car parked on cycle path, etc.) ;</li>
+            <li>Take a photo of it with your phone ;</li>
+            <li>Done! Your photo is uploaded, and we use your gps geolocation to report your spot ;</li>
+        </ol>
+    </p>
+</div>
 {% endblock %}

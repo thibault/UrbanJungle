@@ -165,8 +165,39 @@ a:hover { color: #036; }
 /**
  * Primary styles
  *
- * Author: 
+ * Author: Thibault Jouannic
  */
+#container {
+    width: 800px;
+    margin: 0 auto;
+    padding-bottom: 150px;
+}
+#container >header {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+#container >header h1 {
+    font-size: 500%;
+    color: #ccc;
+    font-family: Verdana, sans-serif;
+}
+span.moto {
+    font-weight: bold;
+}
+#map_canvas {
+    height: 400px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 30px;
+}
+h2 {
+    font-size: 300%;
+    color: #ccc;
+    font-family: Verdana, sans-serif;
+}
+#container p {
+    margin-bottom: 1em;
+}
 
 
 
