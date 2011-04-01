@@ -12,6 +12,8 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     UPLOAD_FOLDER = '/home/urbanjungle/reports/'
+    # Yeah, you see my password. So what?!
+    SQLALCHEMY_DATABASE_URI = 'mysql://urbanjungle:zee5euSh@localhost/urbanjungle'
 
 class TestConfig(Config):
     DEBUG = False
