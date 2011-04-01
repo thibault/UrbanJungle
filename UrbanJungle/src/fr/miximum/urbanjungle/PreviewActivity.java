@@ -265,7 +265,7 @@ public class PreviewActivity extends Activity {
     class UploadImageTask extends AsyncTask<File, Integer, Boolean> {
 
         /** Upload file to this url */
-        private static final String UPLOAD_URL = "http://thibault-laptop:8080/report";
+        private static final String UPLOAD_URL = "http://urbanjungle.miximum.fr/report";
 
         /** Send the file with this form name */
         private static final String FIELD_FILE = "file";
