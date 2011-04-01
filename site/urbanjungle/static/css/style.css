@@ -198,20 +198,10 @@ h2 {
 #container p {
     margin-bottom: 1em;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.apk_qr {
+    display: block;
+    margin: 1em auto;
+}
 
 
 /**
