@@ -33,7 +33,7 @@ function addMarkers(map) {
     info = new google.maps.InfoWindow();
     $.getJSON(markersUri, function(data) {
         $.each(data['markers'], function(k, v) {
-            createMarker(map, v['latitude'], v['longitude']);
+            createMarker(map, v['id'], v['latitude'], v['longitude']);
         });
     });
 }
@@ -41,18 +41,19 @@ function addMarkers(map) {
 /**
  * Add a marker on the map
  */
-function createMarker(map, latitude, longitude) {
+function createMarker(map, id, latitude, longitude) {
     var m = new google.maps.Marker({
         position: new google.maps.LatLng(latitude, longitude),
         map: map,
     });
+    m.setId(id);
     google.maps.event.addListener(m, 'click', function() {
         openInfoWindow(map, m);
     });
 }
 
 function openInfoWindow(map, m) {
-    info.setContent('<div class="infoWindow">toto</div>');
+    info.setContent('<div class="infoWindow"><img src="/report/picture/' + m.getId() + '.jpg" /></div>');
     info.open(map, m);
 }
 
