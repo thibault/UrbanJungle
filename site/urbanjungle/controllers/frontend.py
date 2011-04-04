@@ -1,6 +1,6 @@
 import os
 import Image
-from flask import Module, request, current_app, render_template, jsonify, send_file
+from flask import Module, request, current_app, render_template, jsonify, send_file, abort
 from werkzeug import secure_filename
 from urbanjungle.models import db
 from urbanjungle.models.report import Report
@@ -27,7 +27,7 @@ def upload(latitude, longitude):
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             return ''
         else:
-            return 'File not allowed', 403
+            abort(403)
     else:
         return '''
             <!doctype html>
@@ -50,7 +50,7 @@ def generate_thumbnail(report_id):
     thumb_path = os.path.join(current_app.config['THUMBS_FOLDER'], report_id + '.jpg')
 
     if '..' in image_path or not os.path.exists(image_path):
-        return 404
+        abort(404)
 
     if not os.path.exists(thumb_path):
         image = Image.open(image_path)
