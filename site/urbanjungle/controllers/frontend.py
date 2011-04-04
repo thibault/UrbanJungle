@@ -48,11 +48,16 @@ def generate_thumbnail(report_id):
     '''
     image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], report_id + '.jpg')
     thumb_path = os.path.join(current_app.config['THUMBS_FOLDER'], report_id + '.jpg')
+
+    if '..' in image_path or not os.path.exists(image_path):
+        return 404
+
     if not os.path.exists(thumb_path):
         image = Image.open(image_path)
         image.thumbnail((current_app.config['THUMB_WIDTH'], current_app.config['THUMB_HEIGHT']), \
             Image.ANTIALIAS)
         image.save(thumb_path)
+
     return send_file(thumb_path, mimetype="image/jpeg")
 
 @frontend.route('/map')
