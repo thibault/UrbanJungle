@@ -53,7 +53,7 @@ function createMarker(map, id, latitude, longitude) {
 }
 
 function openInfoWindow(map, m) {
-    info.setContent('<div class="infoWindow"><img width="300px" src="/report/picture/' + m.getId() + '.jpg" /></div>');
+    info.setContent('<div class="infoWindow"><img src="/report/thumbnail/' + m.getId() + '.jpg" /></div>');
     info.open(map, m);
 }
 

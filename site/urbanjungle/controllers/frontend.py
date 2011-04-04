@@ -1,5 +1,6 @@
 import os
-from flask import Module, request, current_app, render_template, jsonify
+import Image
+from flask import Module, request, current_app, render_template, jsonify, send_file
 from werkzeug import secure_filename
 from urbanjungle.models import db
 from urbanjungle.models.report import Report
@@ -36,6 +37,22 @@ def upload(latitude, longitude):
             <input type=submit value=Upload>
             </form>
         '''
+
+@frontend.route('/report/thumbnail/<report_id>.jpg')
+def generate_thumbnail(report_id):
+    '''
+    Generate thumbnail for given image.
+    This uri should be passed through flask only if the thumb file does not exists.
+    Otherwise, it should be served as a static file.
+    '''
+    image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], report_id + '.jpg')
+    thumb_path = os.path.join(current_app.config['THUMBS_FOLDER'], report_id + '.jpg')
+    if not os.path.exists(thumb_path):
+        image = Image.open(image_path)
+        image.thumbnail((current_app.config['THUMB_WIDTH'], current_app.config['THUMB_HEIGHT']), \
+            Image.ANTIALIAS)
+        image.save(thumb_path)
+    return send_file(thumb_path, mimetype="image/jpeg")
 
 @frontend.route('/map')
 def map():
