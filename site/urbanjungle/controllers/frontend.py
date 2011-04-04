@@ -13,6 +13,7 @@ def allowed_file(filename):
 
 @frontend.route('/report/<latitude>,<longitude>', methods=['GET', 'PUT'])
 def upload(latitude, longitude):
+    '''Handle file upload'''
     if request.method == 'PUT':
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -56,10 +57,15 @@ def generate_thumbnail(report_id):
 
 @frontend.route('/map')
 def map():
+    '''Render the main map page'''
     return render_template('map.html')
 
 @frontend.route('/map/markers/<ne_lat>,<ne_lng>,<sw_lat>,<sw_lng>.json')
 def get_markers(ne_lat, ne_lng, sw_lat, sw_lng):
+    '''
+    Return markers related to the given frame.
+    Send them in a json format
+    '''
     markers = Report.query \
         .filter(Report.latitude < ne_lat) \
         .filter(Report.latitude > sw_lat) \
