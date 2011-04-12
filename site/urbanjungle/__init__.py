@@ -14,3 +14,6 @@ babel = Babel(app)
 
 from urbanjungle.controllers.frontend import frontend
 app.register_module(frontend)
+
+from urbanjungle.controllers.backend import backend
+app.register_module(backend, url_prefix='/admin')

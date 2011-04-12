@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+  <ul id="reports">
+  {% for report in reports %}
+    <li class="report">
+      {{ report.latitude }} ; {{ report.longitude }} <br />
+      <img src="{{ url_for('frontend.generate_thumbnail', report_id=report.id)  }}" />
+    </li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}
