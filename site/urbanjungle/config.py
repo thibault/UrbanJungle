@@ -7,14 +7,13 @@ class Config(object):
     SQLALCHEMY_ECHO = False
     THUMB_WIDTH = 200
     THUMB_HEIGHT = 200
+    SQLALCHEMY_DATABASE_URI = 'mysql://urbanjungle:urbanjungle@localhost/urbanjungle'
 
 class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     UPLOAD_FOLDER = '/home/urbanjungle/reports/'
     THUMBS_FOLDER = '/home/urbanjungle/thumbs/'
-    # Yeah, you see my password. So what?!
-    SQLALCHEMY_DATABASE_URI = 'mysql://urbanjungle:zee5euSh@localhost/urbanjungle'
 
 class TestConfig(Config):
     DEBUG = False
@@ -26,4 +25,3 @@ class DevelopmentConfig(Config):
     TESTING = True
     UPLOAD_FOLDER = '/tmp/upload/'
     THUMBS_FOLDER = '/tmp/upload/thumbs/'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
