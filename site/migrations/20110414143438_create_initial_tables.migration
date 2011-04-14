@@ -1,0 +1,15 @@
+#-*- coding:utf-8 -*-
+SQL_UP = u"""
+CREATE TABLE `reports` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `latitude` decimal(9,6) DEFAULT NULL,
+    `longitude` decimal(9,6) DEFAULT NULL,
+    `created` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDb DEFAULT CHARSET=utf8;
+
+"""
+
+SQL_DOWN = u"""
+DROP TABLE reports;
+"""
